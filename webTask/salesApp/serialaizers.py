@@ -17,7 +17,7 @@ class ItemsSer(serializers.ModelSerializer):
             totalSoldProduct = i.totalSoldProduct
             d = {
                 "title": title,
-                "stringId": stringId,
+                "IID": stringId,
                 "projImage": projImage,
                 "totalSoldProduct": totalSoldProduct,
             }
