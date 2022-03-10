@@ -1,0 +1,10 @@
+py manage.py runserver
+
+py manage.py migrate
+
+py manage.py makemigrations #app_name
+
+python manage.py createsuperuser --username=#test --email=#joe@example.com
+
+pip3 install djangorestframework
+
