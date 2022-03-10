@@ -18,7 +18,7 @@ class ItemsSer(serializers.ModelSerializer):
             d = {
                 "title": title,
                 "IID": stringId,
-                "projImage": projImage,
+                "itemImage": projImage,
                 "totalSoldProduct": totalSoldProduct,
             }
             data.append(d)
