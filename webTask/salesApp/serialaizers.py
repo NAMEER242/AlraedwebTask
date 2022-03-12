@@ -15,11 +15,13 @@ class ItemsSer(serializers.ModelSerializer):
             title = i.title
             projImage = str(i.itemImage)
             totalSoldProduct = i.totalSoldProduct
+            des = i.description
             d = {
                 "title": title,
                 "IID": stringId,
                 "itemImage": projImage,
                 "totalSoldProduct": totalSoldProduct,
+                "description": des,
             }
             data.append(d)
 
