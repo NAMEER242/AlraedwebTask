@@ -167,7 +167,7 @@ def addItem(request):
 # ----------------------------------------------------------------------------------------------------------------------#
 
 
-@api_view(['PATCH'])
+@api_view(['POST'])
 def editReceipt(request):
     RID = str(request.query_params.get('id'))
     seller = str(request.query_params.get('slr'))
@@ -193,7 +193,7 @@ def editReceipt(request):
         return HttpResponse("Error!!")
 
 
-@api_view(['PATCH'])
+@api_view(['POST'])
 def editItems(request):
 
     IID = str(request.query_params.get('id'))

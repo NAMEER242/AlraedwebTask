@@ -11,19 +11,22 @@ class ItemsSer(serializers.ModelSerializer):
     def topItemsSer(items):
         data = []
         for i in items:
-            stringId = i.IID
+            IID = i.IID
             title = i.title
             projImage = str(i.itemImage)
             totalSoldProduct = i.totalSoldProduct
             des = i.description
             price = i.productPrice
+            uploadDate = i.uploadDate
             d = {
-                "title": title,
-                "IID": stringId,
-                "itemImage": projImage,
-                "totalSoldProduct": totalSoldProduct,
-                "description": des,
-                "price": price,
+                IID: {
+                    "title": title,
+                    "itemImage": projImage,
+                    "totalSoldProduct": totalSoldProduct,
+                    "description": des,
+                    "price": price,
+                    "uploadDate": uploadDate,
+                }
             }
             data.append(d)
 
@@ -35,13 +38,14 @@ class ItemsSer(serializers.ModelSerializer):
         if len(items) > 0:
             for i in items:
                 d = {
-                    "title": i.title,
-                    "description": i.description,
-                    "ProjImage": str(i.itemImage),
-                    "totalSoldProduct": i.totalSoldProduct,
-                    "productPrice": i.productPrice,
-                    "uploadDate": i.uploadDate,
-                    "IID": i.IID,
+                    i.IID: {
+                        "title": i.title,
+                        "description": i.description,
+                        "itemImage": str(i.itemImage),
+                        "totalSoldProduct": i.totalSoldProduct,
+                        "Price": i.productPrice,
+                        "uploadDate": i.uploadDate,
+                    }
                 }
                 data.append(d)
             return data
