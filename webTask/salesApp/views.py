@@ -39,7 +39,7 @@ def log_in(request):
     user = authenticate(request, username=u, password=p)
     if user is not None:
         login(request, user)
-        return HttpResponse(request.user.username)
+        return JsonResponse(serialaizers.CustomUserSer.users([CustomUser.objects.get(username=request.user.username)]), safe=False)
     else:
         return HttpResponse('Error!!')
 
@@ -52,7 +52,7 @@ def logout_user(request):
 
 @api_view(['GET'])
 def get_me(request):
-    return HttpResponse(request.user.username)
+    return JsonResponse(serialaizers.CustomUserSer.users([CustomUser.objects.get(username=request.user.username)]), safe=False)
 
 
 # ----------------------------------------------------------------------------------------------------------------------#
@@ -122,25 +122,28 @@ def getReceipts(request):
 def addReceipt(request):
     seller = str(request.query_params.get('slr'))
     buyer = str(request.query_params.get('byr'))
-    item = request.query_params.get('prod')
+    items = request.query_params.get('prod')
+    itemsArray = items.split(',')
     notes = str(request.query_params.get('notes'))
     price = request.query_params.get('price')
     dateTime = int(time.time() * 1000)
-    if Items.objects.filter(IID=item).exists():
+
+    res = []
+    for i in itemsArray:
         r = Receipts.objects.create(
             seller=seller,
             buyer=buyer,
-            product=item,
+            product=i,
             notes=notes,
             price=float(price),
             datetime=dateTime,
         )
-        itm = Items.objects.get(IID=item)
+        res.append(str(r.RID) + ', ')
+        itm = Items.objects.get(IID=i)
         itm.totalSoldProduct = itm.totalSoldProduct + 1
         itm.save()
-        return HttpResponse(r.RID)
-    else:
-        return HttpResponse("InputError!!")
+
+    return HttpResponse(res)
 
 
 @api_view(['POST'])
@@ -175,22 +178,21 @@ def editReceipt(request):
     product = request.query_params.get('prod')
     notes = str(request.query_params.get('notes'))
     price = request.query_params.get('price')
-    if len(Items.objects.filter(IID=product)) > 0:
-        cr = Receipts.objects.get(RID=RID)
-        if seller is not None:
-            cr.seller = seller
-        if buyer is not None:
-            cr.buyer = buyer
-        if product is not None:
-            cr.product = product
-        if notes is not None:
-            cr.notes = notes
-        if price is not None:
-            cr.price = float(price)
-        cr.save()
-        return HttpResponse(cr.RID)
-    else:
-        return HttpResponse("Error!!")
+
+    cr = Receipts.objects.get(RID=RID)
+    if seller is not None:
+        cr.seller = seller
+    if buyer is not None:
+        cr.buyer = buyer
+    if product is not None:
+        cr.product = product
+    if notes is not None:
+        cr.notes = notes
+    if price is not None:
+        cr.price = float(price)
+    cr.save()
+
+    return HttpResponse(cr.RID)
 
 
 @api_view(['POST'])
@@ -230,6 +232,17 @@ def deleteItem(request):
     IID = str(request.query_params.get('id'))
     if Items.objects.filter(IID=IID).exists():
         p = Items.objects.get(IID=IID)
+        p.delete()
+        return HttpResponse("Done!!")
+    else:
+        return HttpResponse("Error!!")
+
+
+@api_view(['DELETE'])
+def deleteReceipt(request):
+    RID = str(request.query_params.get('id'))
+    if Receipts.objects.filter(RID=RID).exists():
+        p = Receipts.objects.filter(RID=RID)
         p.delete()
         return HttpResponse("Done!!")
     else:

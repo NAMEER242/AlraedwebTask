@@ -58,6 +58,21 @@ class CustomUserSer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+    @staticmethod
+    def users(users):
+        data = []
+        for u in users:
+            d = {
+                u.id: {
+                    "user": u.username,
+                    "img": str(u.image),
+                    "fName": u.first_name,
+                    "lName": u.last_name,
+                }
+            }
+            data.append(d)
+        return data
+
 
 class CompanyReceiptsSer(serializers.ModelSerializer):
     class Meta:
